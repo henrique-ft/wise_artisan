@@ -16,4 +16,6 @@ class {{controller_name}}Controller extends Controller
     {
         return view('{{view_path}}index');
     }
+    
+{{actions}}
 }

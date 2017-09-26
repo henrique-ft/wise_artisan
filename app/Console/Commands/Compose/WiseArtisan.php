@@ -31,7 +31,7 @@ trait WiseArtisan
 
         },explode('/', str_before($string, $class_name)))),'\\');
         
-        return ($namespace == '\\')? '' : '\\' . $namespace;
+        return ($namespace == '\\' || $namespace == '')? '' : '\\' . $namespace;
     }
     
     protected function getDirectoryStructureFromString($string, $dot = false, $lowercase = false)
@@ -65,6 +65,12 @@ trait WiseArtisan
         $content = str_replace('{{namespace}}', $namespace, $controller_stub);
         $content = str_replace('{{controller_name}}', str_replace('Controller', '', $name), $content);
         $content = str_replace('{{view_path}}', $view_path. strtolower(str_replace('Controller', '', $name)) .'.', $content);
+        $content = str_replace('{{path}}', str_replace('/', '\\', $path), $content);
+        
+        if (!$resource) {
+
+            $content = str_replace('{{actions}}', '', $content);
+        }
         
         // Create a path name
         $path = base_path('app/Http/Controllers/'.$path);
@@ -91,15 +97,29 @@ trait WiseArtisan
         }
     }
     
-    protected function createResourcesController($path, $name)
+    // php artisan compose:controller Teste teste(SeilaRequest$request,int$teste):force seila() fazercoisa()
+    protected function createControllerWithActions($path, $name, $namespace, $view_path, $actions = [])
     {
-
         // Recebe o stub do controller
-        $controller_stub = file_get_contents(base_path('app/Console/Commands/Compose/Controllers/Stubs/controller.stub'));
-       
+        $action_stub = file_get_contents(base_path('app/Console/Commands/Compose/Controllers/Stubs/method.stub'));
+        $controller_stub = file_get_contents(base_path('app/Console/Commands/Compose/Controllers/Stubs/controller.stub')); 
+        
+        $actions_filled = '';
+        
+        foreach ($actions as $action) {
+            
+            $aux = str_replace('{{method_name}}', $action, $action_stub);
+            $aux = str_replace('{{method_params}}', '', $aux);
+            $aux = str_replace('{{view_path}}', $view_path. strtolower(str_replace('Controller', '', $name)) .'.', $aux);
+            
+            $actions_filled .= $aux . "\n\n";
+        }
+        
         $content = str_replace('{{namespace}}', $namespace, $controller_stub);
         $content = str_replace('{{controller_name}}', str_replace('Controller', '', $name), $content);
         $content = str_replace('{{view_path}}', $view_path. strtolower(str_replace('Controller', '', $name)) .'.', $content);
+        $content = str_replace('{{path}}', str_replace('/', '\\', $path), $content);
+        $content = str_replace('{{actions}}', $actions_filled, $content);
         
         // Create a path name
         $path = base_path('app/Http/Controllers/'.$path);
@@ -124,7 +144,6 @@ trait WiseArtisan
             // Write information on console
             $this->error('Controller  '.ucfirst($name).' already exists!');
         }
-   
     }
 
     protected function createViewFile($path, $name, $content)

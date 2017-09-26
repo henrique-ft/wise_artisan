@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Compose\Controllers;
 
-use Illuminate\Console\Command; 
+use Illuminate\Console\Command;
 
 class ControllerCompose extends Command
 {
@@ -13,14 +13,14 @@ class ControllerCompose extends Command
      *
      * @var string
      */
-    protected $signature = 'compose:controller {controllers_names*} {--resource}';
+    protected $signature = 'compose:controller {arguments*}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a controller, a unit test, assets, and a view folder for it';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -39,83 +39,81 @@ class ControllerCompose extends Command
      */
     public function handle()
     {   
-
-        foreach ($this->argument('controllers_names') as $controller_name) {
-            
-            // Get the class name
-            $class_name = $this->getClassNameFromString($controller_name);
-            
-            // Re-make the controller full name 
-            $controller_name = $this->getDirectoryStructureFromString($controller_name) . $this->putSuffixAndUcFirst($class_name, 'Controller');
-            
-            // Write information on console
-            $this->line('-> Composing: '.$controller_name. '...');
-            
-            // ---------------- Create the controllers.
-            
-            $this->createController(
-                $this->getDirectoryStructureFromString($controller_name),
-                    $this->getClassNameFromString($controller_name),
-                        $this->getNamespaceFromString($controller_name),
-                            $this->getDirectoryStructureFromString($controller_name, true),
-                                $this->option('resource')
-            );
+        // php artisan compose:controller Teste teste(SeilaRequest$request,int$teste):force seila() fazercoisa()
         
-            //$this->option('resource')
+        $arguments = $this->argument('arguments');
+        
+        $controller_name = array_shift($arguments);
+        
+        $actions = $arguments;
             
-            // --------------- Create tests for controllers.
+        // Get the class name
+        $class_name = $this->getClassNameFromString($controller_name);
+        
+        // Re-make the controller full name 
+        $controller_name = $this->getDirectoryStructureFromString($controller_name) . $this->putSuffixAndUcFirst($class_name, 'Controller');
+        
+        // Write information on console
+        $this->line('-> Composing: '.$controller_name. '...');
+        
+        // ---------------- Create the controllers.
+        
+        $this->createControllerWithActions(
+            $this->getDirectoryStructureFromString($controller_name),
+                $this->getClassNameFromString($controller_name),
+                    $this->getNamespaceFromString($controller_name),
+                        $this->getDirectoryStructureFromString($controller_name, true),
+                            $actions
+        );
+    
+        //$this->option('resource')
+        
+        // --------------- Create tests for controllers.
+        
+        $this->call('make:test',[
             
-            $this->call('make:test',[
-                
-                    'name' => 'Controllers/' . '' . $controller_name . 'Test'
-                ]);
+                'name' => 'Controllers/' . $controller_name . 'Test'
+            ]);
+        
+        // --------------- Create Requests if resource option is set.
+        
+
+        foreach($actions as $action) {
             
-            // --------------- Create Requests if resource option is set
+            // Se tiver a palavra Request em algum lugar do parâmetro da action, cria automaticamente as requests 
             
-            if ($this->option('resource')) {
-                
-                $this->call('make:request',[
-                
-                    'name' => str_replace('Controller', '', $controller_name . 'StoreRequest')
-                ]);       
-                
-                $this->call('make:request',[
-                
-                    'name' => str_replace('Controller', '', $controller_name . 'UpdateRequest')
-                ]);   
-            }
+            // $this->call('make:request',[
             
-            // --------------- Create views for controllers. 
-            
-            // Create a path name for views
-            $path = base_path('resources/views/'.$this->getDirectoryStructureFromString($controller_name, false, true). strtolower(str_replace('Controller', '', $this->getClassNameFromString($controller_name))));
-
-            // If this path dont exist
-            if (!file_exists($path)) {
-
-                // Create a path
-                mkdir($path, 0777, true);
-            }
-
-            // Create index view
-            $this->createViewFile($path,'index','');
-
-            // Create resources views
-            if($this->option('resource')) {
-
-                $this->createViewFile($path,'create','');
-                $this->createViewFile($path,'show','');
-                $this->createViewFile($path,'edit','');
-            }
-            
-            // --------------- Create assets for controllers. 
-
-            // Create a path name for asset
-            $path_js = base_path('resources/assets/js/'.$this->getDirectoryStructureFromString($controller_name, false, true));
-            $path_sass = base_path('resources/assets/sass/'.$this->getDirectoryStructureFromString($controller_name, false, true));
-
-            $this->createAssets($path_js, $path_sass, snake_case(str_replace('Controller', '', $class_name)));
+            //     'name' => str_replace('Controller', '', $controller_name) . '/StoreRequest'
+            // ]);   
         }
-    }
+        
+        // --------------- Create views for controllers. 
+        
+        // Create a path name for views
+        $path = base_path('resources/views/'.$this->getDirectoryStructureFromString($controller_name, false, true). strtolower(str_replace('Controller', '', $this->getClassNameFromString($controller_name))));
 
+        // If this path dont exist
+        if (!file_exists($path)) {
+
+            // Create a path
+            mkdir($path, 0777, true);
+        }
+
+        // Create index view
+        $this->createViewFile($path,'index','');
+        
+        foreach($actions as $action) {
+            
+            $this->createViewFile($path, $action,'');
+        }
+        
+        // --------------- Create assets for controllers. 
+
+        // Create a path name for asset
+        $path_js = base_path('resources/assets/js/'.$this->getDirectoryStructureFromString($controller_name, false, true));
+        $path_sass = base_path('resources/assets/sass/'.$this->getDirectoryStructureFromString($controller_name, false, true));
+
+        $this->createAssets($path_js, $path_sass, snake_case(str_replace('Controller', '', $class_name)));
+    }
 }

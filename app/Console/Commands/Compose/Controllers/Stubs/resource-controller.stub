@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\{{namespace}};
+namespace App\Http\Controllers{{namespace}};
 
 // Requests
-use Illuminate\Http\Requests\{{controller_name}}StoreRequest;
-use Illuminate\Http\Requests\{{controller_name}}UpdateRequest;
+use Illuminate\Http\Requests\{{path}}{{controller_name}}\StoreRequest;
+use Illuminate\Http\Requests\{{path}}{{controller_name}}\UpdateRequest;
 
 class {{controller_name}}Controller extends Controller
 {

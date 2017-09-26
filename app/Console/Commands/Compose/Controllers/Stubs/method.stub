@@ -1,0 +1,9 @@
+    /**
+     * {{method_name}} method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function {{method_name}}({{method_params}})
+    {
+        return view('{{view_path}}{{method_name}}');
+    }
