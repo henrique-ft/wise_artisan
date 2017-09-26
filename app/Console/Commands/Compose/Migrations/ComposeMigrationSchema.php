@@ -20,7 +20,7 @@ class ComposeMigrationSchema extends Command
      *
      * @var string
      */
-    protected $name = 'compose:migration:schema {name} {--schema=} {--model}';
+    protected $name = 'compose:migration {name} {--schema=} {--model}';
 
     /**
      * The console command description.

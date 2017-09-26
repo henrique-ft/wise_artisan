@@ -15,7 +15,7 @@ class ComposeMigrationPivot extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'compose:migration:pivot';
+    protected $name = 'compose:pivot';
 
     /**
      * The console command description.
