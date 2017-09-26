@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Console\Commands\Compose\Controllers;
+namespace App\Console\Commands\WiseArtisan\Controllers;
 
 use Illuminate\Console\Command;
 
 class ControllerCompose extends Command
 {
-    use \App\Console\Commands\Compose\WiseArtisan;
+    use \App\Console\Commands\WiseArtisan\WiseArtisan;
     
     /**
      * The name and signature of the console command.
@@ -20,7 +20,7 @@ class ControllerCompose extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Create a controller with methods, tests, a view folder for ir and plain blade files. Create requests if is a resource controller';
 
     /**
      * Create a new command instance.

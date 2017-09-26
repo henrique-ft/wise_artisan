@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Compose\Migrations\Parsers;
+namespace App\Console\Commands\WiseArtisan\Migrations\Parsers;
 
 class SchemaParser
 {

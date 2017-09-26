@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Console\Commands\Compose\Migrations;
+namespace App\Console\Commands\WiseArtisan\Migrations;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
 
 class ComposeSeed extends GeneratorCommand
 {
-    use \App\Console\Commands\Compose\WiseArtisan;
+    use \App\Console\Commands\WiseArtisan\WiseArtisan;
 
     /**
      * The console command name.

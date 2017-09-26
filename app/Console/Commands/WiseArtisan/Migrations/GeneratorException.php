@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Compose\Migrations;
+namespace App\Console\Commands\WiseArtisan\Migrations;
 
 class GeneratorException extends \Exception
 {

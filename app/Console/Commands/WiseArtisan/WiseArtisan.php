@@ -1,11 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Compose;
-
-use Blacktools\Metabot\Base\PhpFile;
-use Blacktools\Metabot\Base\PhpClass;
-use Blacktools\Metabot\Base\PhpMethod;
-use Blacktools\Metabot\Base\PhpFunction;
+namespace App\Console\Commands\WiseArtisan;
 
 trait WiseArtisan
 {
@@ -48,7 +43,57 @@ trait WiseArtisan
 
         },explode('/',str_before($string, $class_name))));
     }
+    
+    protected function createModel($name, $methods = [], $fillable = [])
+    {
 
+        // Recebe o stub do model
+        $method_stub = file_get_contents(base_path('app/Console/Commands/Compose/Controllers/Stubs/method.stub'));
+        $model_stub = file_get_contents(base_path('app/Console/Commands/Compose/Controllers/Stubs/controller.stub')); 
+        
+        $actions_filled = '';
+        
+        foreach ($methods as $method) {
+            
+            $aux = str_replace('{{method_name}}', $method, $method_stub);
+            $aux = str_replace('{{method_params}}', '', $aux);
+            $aux = str_replace('{{view_path}}', $view_path. strtolower(str_replace('Controller', '', $name)) .'.', $aux);
+            
+            $methods_filled .= $aux . "\n\n";
+        }
+        
+        $content = str_replace('{{namespace}}', $namespace, $model_stub);
+        $content = str_replace('{{controller_name}}', str_replace('Controller', '', $name), $content);
+        $content = str_replace('{{view_path}}', $view_path. strtolower(str_replace('Controller', '', $name)) .'.', $content);
+        $content = str_replace('{{path}}', str_replace('/', '\\', $path), $content);
+        $content = str_replace('{{actions}}', $methods_filled, $content);
+        
+        // Create a path name
+        $path = base_path('app/Http/Controllers/'.$path);
+
+        // If this path dont exist
+        if (!file_exists($path)) {
+
+            // Create a path
+            mkdir($path, 0777, true);
+        }
+
+        // If dont existe this file
+        if (!file_exists($path.$name.".php")) {
+            
+            // Create a file
+            fwrite(fopen($path.$name.".php", "w"), $content);
+
+            // Write information on console
+            $this->info('Controller '.ucfirst($name).' created successfully.');
+
+        } else {
+            // Write information on console
+            $this->error('Controller  '.ucfirst($name).' already exists!');
+        }
+
+    }
+    
     protected function createController($path, $name, $namespace, $view_path, $resource = false)
     {
         // Recebe o stub do controller

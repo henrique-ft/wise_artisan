@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Console\Commands\Compose\Migrations;
+namespace App\Console\Commands\WiseArtisan\Migrations;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
-use App\Console\Commands\Compose\Migrations\Parsers\NameParser;
-use App\Console\Commands\Compose\Migrations\Parsers\SchemaParser;
-use App\Console\Commands\Compose\Migrations\Parsers\SyntaxBuilder;
+use App\Console\Commands\WiseArtisan\Migrations\Parsers\NameParser;
+use App\Console\Commands\WiseArtisan\Migrations\Parsers\SchemaParser;
+use App\Console\Commands\WiseArtisan\Migrations\Parsers\SyntaxBuilder;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
 class ComposeMigrationSchema extends Command
 {
-    use \App\Console\Commands\Compose\WiseArtisan;
+    use \App\Console\Commands\WiseArtisan\WiseArtisan;
 
     /**
      * The console command name.
@@ -90,6 +90,9 @@ class ComposeMigrationSchema extends Command
      */
     protected function makeMigration()
     {
+        // Write information on console
+        $this->line('-> Composing: '.$this->argument('name'). '...');
+
         $name = $this->argument('name');
 
         if ($this->files->exists($path = $this->getPath($name))) {
@@ -139,6 +142,13 @@ class ComposeMigrationSchema extends Command
         $this->call('make:test', [
             'name' => 'Models/'.$this->getModelName().'Test',
             '--unit' => true
+        ]);
+        
+        // Create a Factory for it
+        $this->call('make:factory',[
+            
+            'name' => $this->getModelName(). 'Factory',
+            '--model' => 'Models/'.$this->getModelName(),
         ]);
     }
 

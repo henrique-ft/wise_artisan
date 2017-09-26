@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Console\Commands\Compose\Migrations\Parsers;
+namespace App\Console\Commands\WiseArtisan\Migrations\Parsers;
 
-use App\Console\Commands\Compose\Migrations\GeneratorException;
+use App\Console\Commands\WiseArtisan\Migrations\GeneratorException;
 
 class SyntaxBuilder
 {
