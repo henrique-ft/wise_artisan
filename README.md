@@ -24,3 +24,18 @@ Create a migration, a model, a factory and a test for it, then migrate it:
 
 $ php artisan compose:migration create_migrations_table --schema="date:date,name,age:int,user:int:unsigned:foreign"
 
+## compose:assets
+
+...
+
+## compose:public
+
+...
+
+## compose:model
+
+...
+
+## compose:admin
+
+...
