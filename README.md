@@ -1,6 +1,6 @@
 # WiseArtisan
 
-A command-line extension for Php7 Laravel framework.
+A little extension for Laravel Framework that join some of Artisan commands in one, for more productivity.
 
 ## compose:controller
 
@@ -24,18 +24,3 @@ Create a migration, a model, a factory and a test for it, then migrate it:
 ```bash
 $ php artisan compose:migration create_migrations_table --schema="date:date,name,age:int,user:int:unsigned:foreign"
 ``` 
-## compose:assets
-
-...
-
-## compose:public
-
-...
-
-## compose:model
-
-...
-
-## compose:admin
-
-...
