@@ -38,7 +38,7 @@ class ComposeSeed extends GeneratorCommand
      */
     protected function parseName($name)
     {
-        return ucwords(camel_case($name)) . 'TableSeeder';
+        return ucwords(\Str::camel($name)) . 'TableSeeder';
     }
 
     /**

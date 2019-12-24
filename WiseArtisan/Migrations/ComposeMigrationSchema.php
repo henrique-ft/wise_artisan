@@ -248,7 +248,7 @@ class ComposeMigrationSchema extends Command
      */
     protected function replaceClassName(&$stub)
     {
-        $className = ucwords(camel_case($this->argument('name')));
+        $className = ucwords(\Str::camel($this->argument('name')));
 
         $stub = str_replace('{{class}}', $className, $stub);
 
@@ -303,7 +303,7 @@ class ComposeMigrationSchema extends Command
      */
     protected function getModelName()
     {
-        return ucwords(str_singular(camel_case($this->meta['table'])));
+        return ucwords(Str::singular(\Str::camel($this->meta['table'])));
     }
 
     /**

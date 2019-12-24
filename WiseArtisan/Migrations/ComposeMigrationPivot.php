@@ -48,7 +48,7 @@ class ComposeMigrationPivot extends GeneratorCommand
      */
     protected function parseName($name)
     {
-        $tables = array_map('str_singular', $this->getSortedTableNames());
+        $tables = array_map('Str::singular', $this->getSortedTableNames());
         $name = implode('', array_map('ucwords', $tables));
 
         return "Create{$name}PivotTable";

@@ -114,6 +114,7 @@ class ControllerCompose extends Command
         $path_js = base_path('resources/assets/js/'.$this->getDirectoryStructureFromString($controller_name, false, true));
         $path_sass = base_path('resources/assets/sass/'.$this->getDirectoryStructureFromString($controller_name, false, true));
 
-        $this->createAssets($path_js, $path_sass, snake_case(str_replace('Controller', '', $class_name)));
+        $this->createAssets($path_js, $path_sass, \Str::snake(str_replace('Controller', '', $class_name)));
     }
 }
+

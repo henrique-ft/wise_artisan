@@ -6,7 +6,7 @@ trait WiseArtisan
 {
     protected function putSuffixAndUcFirst($string, $suffix)
     {
-        return (str_contains($suffix, $string))? $string : ucfirst($string) . $suffix;
+        return (\Str::contains($suffix, $string))? $string : ucfirst($string) . $suffix;
     }
     
     protected function getClassNameFromString($string)
@@ -22,9 +22,9 @@ trait WiseArtisan
         // Get the directory structure
         $namespace = rtrim(implode('\\',array_map(function($val){
 
-            return title_case($val);
+            return \Str::title($val);
 
-        },explode('/', str_before($string, $class_name)))),'\\');
+        },explode('/', \Str::before($string, $class_name)))),'\\');
         
         return ($namespace == '\\' || $namespace == '')? '' : '\\' . $namespace;
     }
@@ -39,9 +39,9 @@ trait WiseArtisan
         // Get the directory structure
         return implode($separation, array_map(function($val) use ($dot, $lowercase){
             
-            return ($dot == true || $lowercase == true)? strtolower($val) : title_case($val);
+            return ($dot == true || $lowercase == true)? strtolower($val) : \Str::title($val);
 
-        },explode('/',str_before($string, $class_name))));
+        },explode('/', \Str::before($string, $class_name))));
     }
     
     protected function createModel($name, $methods = [], $fillable = [])
